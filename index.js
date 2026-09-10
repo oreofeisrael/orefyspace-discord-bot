@@ -1,3 +1,7 @@
+require('dotenv').config();
+
+const express = require('express');
+
 const {
     Client,
     GatewayIntentBits
@@ -6,8 +10,6 @@ const {
 const { generateAIResponse } = require('./ai/gemini');
 const db = require('./database');
 
-require('dotenv').config();
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -15,6 +17,28 @@ const client = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
+
+
+// ==============================
+// HEALTH SERVER
+// ==============================
+
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('Orefyspace.com Discord Bot is online.');
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`🌐 Health server running on port ${PORT}`);
+});
+
+
+// ==============================
+// BOT READY
+// ==============================
 
 client.once('clientReady', async () => {
     console.log(`✅ ${client.user.tag} is online!`);
