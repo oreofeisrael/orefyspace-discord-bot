@@ -31,10 +31,9 @@ module.exports = {
             );
 
             if (result.rows.length === 0) {
-                return interaction.reply({
-                    content: `❌ Warning #${warningId} was not found in this server.`,
-                    ephemeral: true
-                });
+                return interaction.editReply(
+                    `❌ Warning #${warningId} was not found in this server.`
+                );
             }
 
             const warning = result.rows[0];
@@ -45,34 +44,30 @@ module.exports = {
 
             if (member) {
                 if (member.id === interaction.user.id) {
-                    return interaction.reply({
-                        content: '❌ You cannot remove your own warning.',
-                        ephemeral: true
-                    });
+                    return interaction.editReply(
+                        '❌ You cannot remove your own warning.'
+                    );
                 }
 
                 if (member.id === interaction.client.user.id) {
-                    return interaction.reply({
-                        content: '❌ I cannot have warnings removed.',
-                        ephemeral: true
-                    });
+                    return interaction.editReply(
+                        '❌ I cannot have warnings removed.'
+                    );
                 }
 
                 if (member.id === interaction.guild.ownerId) {
-                    return interaction.reply({
-                        content: '❌ The server owner cannot have warnings removed.',
-                        ephemeral: true
-                    });
+                    return interaction.editReply(
+                        '❌ The server owner cannot have warnings removed.'
+                    );
                 }
 
                 if (
                     member.roles.highest.position >=
                     interaction.member.roles.highest.position
                 ) {
-                    return interaction.reply({
-                        content: '❌ You cannot remove warnings for a member with an equal or higher role than yours.',
-                        ephemeral: true
-                    });
+                    return interaction.editReply(
+                        '❌ You cannot remove warnings for a member with an equal or higher role than yours.'
+                    );
                 }
             }
 
@@ -90,7 +85,7 @@ module.exports = {
                 reason: warning.reason
             });
 
-            await interaction.reply(
+            await interaction.editReply(
                 `✅ **Warning #${warning.id}** has been removed.\n` +
                 `**Reason:** ${warning.reason}`
             );
@@ -98,10 +93,9 @@ module.exports = {
         } catch (error) {
             console.error('Unwarn database error:', error);
 
-            await interaction.reply({
-                content: '❌ I could not remove that warning.',
-                ephemeral: true
-            });
+            await interaction.editReply(
+                '❌ I could not remove that warning.'
+            );
         }
     },
 };

@@ -6,6 +6,8 @@ module.exports = {
         .setDescription('Check if Orefyspace.com is online'),
 
     async execute(interaction) {
-        await interaction.reply('🏓 Pong! Orefyspace.com is online.');
+        await interaction.editReply(
+            '🏓 Pong! Orefyspace.com is online.'
+        );
     },
 };

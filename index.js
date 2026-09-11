@@ -67,23 +67,55 @@ client.once('clientReady', async () => {
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    const command = require(`./commands/${interaction.commandName}.js`);
+    let command;
 
     try {
-        await command.execute(interaction);
+        command = require(`./commands/${interaction.commandName}.js`);
     } catch (error) {
-        console.error('❌ Command error:', error);
+        console.error(
+            `❌ Could not load command "${interaction.commandName}":`,
+            error
+        );
 
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({
-                content: '❌ Something went wrong while executing this command.',
-                ephemeral: true
-            });
-        } else {
+        if (!interaction.replied && !interaction.deferred) {
             await interaction.reply({
-                content: '❌ Something went wrong while executing this command.',
+                content: '❌ This command could not be loaded.',
                 ephemeral: true
-            });
+            }).catch(() => {});
+        }
+
+        return;
+    }
+
+    try {
+        // Acknowledge the interaction immediately.
+        // This gives the command more time to complete its work.
+        await interaction.deferReply();
+
+        await command.execute(interaction);
+
+    } catch (error) {
+        console.error(
+            `❌ Command error [/${interaction.commandName}]:`,
+            error
+        );
+
+        try {
+            if (interaction.deferred || interaction.replied) {
+                await interaction.editReply(
+                    '❌ Something went wrong while executing this command.'
+                );
+            } else {
+                await interaction.reply({
+                    content: '❌ Something went wrong while executing this command.',
+                    ephemeral: true
+                });
+            }
+        } catch (replyError) {
+            console.error(
+                '❌ Could not send command error response:',
+                replyError.message
+            );
         }
     }
 });
@@ -152,6 +184,15 @@ client.on('messageCreate', async (message) => {
             '❌ Sorry, I could not connect to Gemini right now.'
         );
     }
+});
+
+
+// ==============================
+// CLIENT ERROR HANDLER
+// ==============================
+
+client.on('error', (error) => {
+    console.error('❌ Discord client error:', error);
 });
 
 

@@ -29,41 +29,36 @@ module.exports = {
         const reason = interaction.options.getString('reason');
 
         if (!member) {
-            return interaction.reply({
-                content: '❌ I could not find that member.',
-                ephemeral: true
-            });
+            return interaction.editReply(
+                '❌ I could not find that member.'
+            );
         }
 
         if (member.id === interaction.user.id) {
-            return interaction.reply({
-                content: '❌ You cannot warn yourself.',
-                ephemeral: true
-            });
+            return interaction.editReply(
+                '❌ You cannot warn yourself.'
+            );
         }
 
         if (member.id === interaction.client.user.id) {
-            return interaction.reply({
-                content: '❌ I cannot warn myself.',
-                ephemeral: true
-            });
+            return interaction.editReply(
+                '❌ I cannot warn myself.'
+            );
         }
 
         if (member.id === interaction.guild.ownerId) {
-            return interaction.reply({
-                content: '❌ The server owner cannot be warned.',
-                ephemeral: true
-            });
+            return interaction.editReply(
+                '❌ The server owner cannot be warned.'
+            );
         }
 
         if (
             member.roles.highest.position >=
             interaction.member.roles.highest.position
         ) {
-            return interaction.reply({
-                content: '❌ You cannot warn a member with an equal or higher role than yours.',
-                ephemeral: true
-            });
+            return interaction.editReply(
+                '❌ You cannot warn a member with an equal or higher role than yours.'
+            );
         }
 
         try {
@@ -86,17 +81,17 @@ module.exports = {
                 reason
             });
 
-            await interaction.reply(
+            await interaction.editReply(
                 `⚠️ **${member.user.tag}** has been warned.\n` +
                 `**Reason:** ${reason}`
             );
+
         } catch (error) {
             console.error('Warning database error:', error);
 
-            await interaction.reply({
-                content: '❌ I could not save the warning to the database.',
-                ephemeral: true
-            });
+            await interaction.editReply(
+                '❌ I could not save the warning to the database.'
+            );
         }
     },
 };

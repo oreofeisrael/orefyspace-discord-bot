@@ -34,10 +34,9 @@ module.exports = {
             );
 
             if (result.rows.length === 0) {
-                return interaction.reply({
-                    content: '📋 There are no moderation logs for this server yet.',
-                    ephemeral: true
-                });
+                return interaction.editReply(
+                    '📋 There are no moderation logs for this server yet.'
+                );
             }
 
             const logList = result.rows
@@ -57,17 +56,16 @@ module.exports = {
                     text: 'Orefyspace.com Moderation'
                 });
 
-            await interaction.reply({
+            await interaction.editReply({
                 embeds: [logsEmbed]
             });
 
         } catch (error) {
             console.error('Moderation logs database error:', error);
 
-            await interaction.reply({
-                content: '❌ I could not retrieve the moderation logs.',
-                ephemeral: true
-            });
+            await interaction.editReply(
+                '❌ I could not retrieve the moderation logs.'
+            );
         }
     },
 };

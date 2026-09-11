@@ -31,10 +31,9 @@ module.exports = {
             );
 
             if (result.rows.length === 0) {
-                return interaction.reply({
-                    content: `✅ **${user.tag}** has no warnings.`,
-                    ephemeral: true
-                });
+                return interaction.editReply(
+                    `✅ **${user.tag}** has no warnings.`
+                );
             }
 
             const warningList = result.rows
@@ -46,7 +45,7 @@ module.exports = {
                 .join('\n\n');
 
             const warningsEmbed = new EmbedBuilder()
-                .setTitle(`⚠️ Warning History`)
+                .setTitle('⚠️ Warning History')
                 .setDescription(`Warnings for **${user.tag}**`)
                 .addFields({
                     name: `Total Warnings: ${result.rows.length}`,
@@ -56,17 +55,16 @@ module.exports = {
                     text: 'Orefyspace.com Moderation'
                 });
 
-            await interaction.reply({
+            await interaction.editReply({
                 embeds: [warningsEmbed]
             });
 
         } catch (error) {
             console.error('Warnings database error:', error);
 
-            await interaction.reply({
-                content: '❌ I could not retrieve the warning history.',
-                ephemeral: true
-            });
+            await interaction.editReply(
+                '❌ I could not retrieve the warning history.'
+            );
         }
     },
 };

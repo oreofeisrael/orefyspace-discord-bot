@@ -19,7 +19,7 @@ module.exports = {
                 text: 'Orefyspace.com • More features coming soon'
             });
 
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [helpEmbed]
         });
     },
